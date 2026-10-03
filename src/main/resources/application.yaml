@@ -1,3 +1,15 @@
 spring:
   application:
     name: job-queue
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5433/job_queue
+    username: jobqueue 
+    password: jobqueue
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  port: 8081

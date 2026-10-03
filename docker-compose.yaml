@@ -1,0 +1,10 @@
+services:
+  
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: job_queue
+      POSTGRES_USER: jobqueue
+      POSTGRES_PASSWORD: jobqueue
+    ports:
+      - "5433:5432"

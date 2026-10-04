@@ -10,7 +10,15 @@ public class CreateJobRequest {
     // Empty constructor but if it is not defined by default Java will 
     // provide one. But it is mandatory to have it when we add a parameterized 
     // constructor
-    public CreateJobRequest() {}
+    public CreateJobRequest() {
+    }
+
+    // public CreateJobRequest(String type, Map<String, Object> payload) {
+    //     System.out.println("CreateJobRequest parameterized constructor called.");
+
+    //     this.type = type;
+    //     this.payload = payload;
+    // }
     
     // ---- GETTERS ----
     public String getType() {

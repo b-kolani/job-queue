@@ -1,5 +1,4 @@
 services:
-  
   postgres:
     image: postgres:18
     environment:
@@ -8,3 +7,10 @@ services:
       POSTGRES_PASSWORD: jobqueue
     ports:
       - "5433:5432"
+    volumes:
+      - job_queue_data:/var/lib/postgresql
+
+volumes:
+  job_queue_data:
+    external: true
+    name: 38f9fffcf0d9027337389b1715a1f2757b30208ed03c5fa622b800299bdaea41

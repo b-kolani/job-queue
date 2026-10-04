@@ -36,6 +36,7 @@ public class Job {
     @Column(name="attempts")
     private int attempts = 0;
 
+    @org.hibernate.annotations.Generated 
     @Column(name="created_at")
     private OffsetDateTime createdAt;
 

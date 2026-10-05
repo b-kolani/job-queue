@@ -2,7 +2,6 @@ package com.biman.job_queue.worker;
 
 import java.util.Optional;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.biman.job_queue.entity.Job;
@@ -19,8 +18,11 @@ public class JobWorker {
 
     // Ask to the Service there is a job 
     // to process
-    @Scheduled(fixedDelay = 1000)
     public void processNextJob() {
+        System.out.println(
+            "Worker Thread: " + Thread.currentThread().getName()
+        );
+
         Optional<Job> job = jobService.reserveNextJob();
 
         // If there is no job the Worker exits
@@ -31,15 +33,32 @@ public class JobWorker {
         // Fetch the reserved job
         Job pendingJob = job.get();
 
+        System.out.println(
+            "Worker " + Thread.currentThread().getName()
+            + " traite le job " + pendingJob.getId()
+        );
+
         // Simulate the execution of the job
         // using a timer
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return;
-        }
+        System.out.println(
+            "START job " + pendingJob.getId()
+            + " - " + Thread.currentThread().getName()
+        );
 
-        jobService.completeJob(pendingJob);
+        throw new RuntimeException("Simulation d'un crash du worker");
+
+        // try {
+        //     Thread.sleep(5000);
+        // } catch (InterruptedException e) {
+        //     Thread.currentThread().interrupt();
+        //     return;
+        // }
+
+        // System.out.println(
+        //     "END job " + pendingJob.getId()
+        //     + " - " + Thread.currentThread().getName()
+        // );
+
+        // jobService.completeJob(pendingJob);
     }
 }

@@ -48,20 +48,23 @@ public class JobWorker {
             + " - " + Thread.currentThread().getName()
         );
 
-        throw new RuntimeException("Simulation d'un crash du worker");
+        // This line is added volontary 
+        // to simulate a crash in order to test if 
+        // a stale processing job is recovered or not
+        // throw new RuntimeException("Simulation d'un crash du worker");
 
-        // try {
-        //     Thread.sleep(5000);
-        // } catch (InterruptedException e) {
-        //     Thread.currentThread().interrupt();
-        //     return;
-        // }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        }
 
-        // System.out.println(
-        //     "END job " + pendingJob.getId()
-        //     + " - " + Thread.currentThread().getName()
-        // );
+        System.out.println(
+            "END job " + pendingJob.getId()
+            + " - " + Thread.currentThread().getName()
+        );
 
-        // jobService.completeJob(pendingJob);
+        jobService.completeJob(pendingJob);
     }
 }

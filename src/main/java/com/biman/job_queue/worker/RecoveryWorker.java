@@ -1,12 +1,12 @@
 package com.biman.job_queue.worker;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.biman.job_queue.entity.Job;
-import com.biman.job_queue.repository.JobRepository;
+import com.biman.job_queue.service.JobService;
 
 // This component/class responsability is to 
 // fetch stale processing jobs. So jobs that are 
@@ -19,21 +19,28 @@ import com.biman.job_queue.repository.JobRepository;
 @Component 
 public class RecoveryWorker {
 
-    private JobRepository jobRepository;
+    private JobService jobService;
 
-    public RecoveryWorker(JobRepository jobRepository) {
-        this.jobRepository = jobRepository;
+    public RecoveryWorker(
+        JobService jobService
+    ) {
+        this.jobService = jobService;
     }
-    
+
     @Scheduled(fixedDelay = 5000)
-    public void recoverJobs() {
+    public void recoverJob() {
 
-        List<Job> staleJobs = jobRepository.findStaleProcessingJobs();
+        Optional<Job> staleJob = jobService.recoverNextStaleJob();
 
-        for (Job job : staleJobs) {
+        if (staleJob.isEmpty()) {
             System.out.println(
-                "Job abandonné détecté : " + job.getId()
+                "Aucun job à récupérer"
             );
+            return ;
         }
+
+        System.out.println(
+            "Job récupéré : " + staleJob.get().getId()
+        );
     }
 }

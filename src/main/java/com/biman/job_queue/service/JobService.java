@@ -67,4 +67,33 @@ public class JobService {
 
         return job;
     }
+
+    // Transactional Method for RecoveryWorker 
+    // to recover a stale processing job
+    @Transactional
+    public Optional<Job> recoverNextStaleJob() {
+
+        Optional<Job> staleJob = jobRepository.findNextStaleProcessingJob();
+
+        if (staleJob.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Job recoveredJob = staleJob.get();
+        int attempts = recoveredJob.getAttempts();
+
+        if (attempts < 3) {
+            recoveredJob.setStatus(JobStatus.PENDING);
+            recoveredJob.setStartedAt(null);
+            recoveredJob.setAttempts(attempts + 1);;
+        } else {
+            recoveredJob.setStatus(JobStatus.FAILED);
+        }
+        
+        // This can be skip beacuse JPA will auto-detected changes 
+        // and save or update data in the database (Dirty Checking of JPA)
+        // jobRepository.save(recoveredJob);
+
+        return Optional.of(recoveredJob);
+    }
 }

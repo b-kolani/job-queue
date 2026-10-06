@@ -1,5 +1,6 @@
 package com.biman.job_queue.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,25 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
         ORDER BY created_at ASC
         LIMIT 1
         FOR UPDATE SKIP LOCKED
-    """, nativeQuery = true)
+        """, nativeQuery = true)
     Optional<Job> findNextPendingJob();
+
+    @Query(value = """
+        SELECT * 
+        FROM jobs
+        WHERE status = 'PROCESSING'
+            AND started_at < NOW() - INTERVAL '15 seconds'
+        """, nativeQuery = true)
+    List<Job> findStaleProcessingJobs();
+
+    @Query(value = """
+        SELECT * 
+        FROM jobs 
+        WHERE status = 'PROCESSING'
+            AND started_at < NOW() - INTERVAL '15 seconds'
+        ORDER BY started_at ASC
+        LIMIT 1
+        FOR UPDATE SKIP LOCKED; 
+        """, nativeQuery = true)
+    Optional<Job> findNextStaleProcessingJob();
 }

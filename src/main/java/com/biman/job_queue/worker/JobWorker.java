@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import com.biman.job_queue.entity.Job;
 import com.biman.job_queue.service.JobService;
 
+//This component/class responsability is to 
+// process jobs from the PENDING phase to 
+// COMPLETED or FAILED phase.
 @Component 
 public class JobWorker {
     private JobService jobService;

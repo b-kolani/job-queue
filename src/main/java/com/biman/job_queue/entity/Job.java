@@ -40,6 +40,9 @@ public class Job {
     @Column(name="created_at")
     private OffsetDateTime createdAt;
 
+    @Column(name="started_at")
+    private OffsetDateTime startedAt;
+
     // Constructor for JPA
     protected Job() {}
 
@@ -74,6 +77,10 @@ public class Job {
         return createdAt;
     }
 
+    public OffsetDateTime getStartedAt() {
+        return startedAt;
+    }
+
     // ---- SETTERS ----
     public void setStatus(JobStatus status) {
         this.status = status;
@@ -85,5 +92,9 @@ public class Job {
         }
 
         this.attempts = attempts;
+    }
+
+    public void setStartedAt(OffsetDateTime startedAt) {
+        this.startedAt = startedAt;
     }
 }

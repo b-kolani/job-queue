@@ -1,5 +1,6 @@
 package com.biman.job_queue.service;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,6 +53,7 @@ public class JobService {
 
         Job pendingJob = job.get();
         pendingJob.setStatus(JobStatus.PROCESSING);
+        pendingJob.setStartedAt(OffsetDateTime.now());
 
         jobRepository.save(pendingJob);
 

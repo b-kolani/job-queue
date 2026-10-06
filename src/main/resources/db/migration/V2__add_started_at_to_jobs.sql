@@ -1,0 +1,2 @@
+ALTER TABLE jobs
+ADD COLUMN started_at TIMESTAMPTZ;

@@ -36,7 +36,7 @@ public class RecoveryWorker {
             System.out.println(
                 "Aucun job à récupérer"
             );
-            return ;
+            return;
         }
 
         System.out.println(

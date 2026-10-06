@@ -61,8 +61,10 @@ public class JobService {
     }
 
     public Job completeJob(Job job) {
-        job.setStatus(JobStatus.COMPLETED);
+        job.complete();
 
+        // We can remove the line below and let JPA
+        // do the Dirty Checking
         jobRepository.save(job);
 
         return job;
@@ -85,7 +87,7 @@ public class JobService {
         if (attempts < 3) {
             recoveredJob.setStatus(JobStatus.PENDING);
             recoveredJob.setStartedAt(null);
-            recoveredJob.setAttempts(attempts + 1);;
+            recoveredJob.setAttempts(attempts + 1);
         } else {
             recoveredJob.setStatus(JobStatus.FAILED);
         }

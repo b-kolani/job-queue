@@ -19,29 +19,32 @@ import jakarta.persistence.Table;
 public class Job {
 
     @Id 
-    @Column(name="id")
+    @Column(name = "id")
     private UUID id = UUID.randomUUID();
     
-    @Column(name="type")
+    @Column(name = "type")
     private String type;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name="payload")
+    @Column(name = "payload")
     private Map<String, Object> payload;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private JobStatus status = JobStatus.PENDING;
 
-    @Column(name="attempts")
+    @Column(name = "attempts")
     private int attempts = 0;
 
     @org.hibernate.annotations.Generated 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
-    @Column(name="started_at")
+    @Column(name = "started_at")
     private OffsetDateTime startedAt;
+
+    @Column(name = "completed_at")
+    private OffsetDateTime completedAt;
 
     // Constructor for JPA
     protected Job() {}
@@ -81,6 +84,10 @@ public class Job {
         return startedAt;
     }
 
+    public OffsetDateTime getCompletedAt() {
+        return completedAt;
+    }
+
     // ---- SETTERS ----
     public void setStatus(JobStatus status) {
         this.status = status;
@@ -96,5 +103,10 @@ public class Job {
 
     public void setStartedAt(OffsetDateTime startedAt) {
         this.startedAt = startedAt;
+    }
+
+    public void complete() {
+        this.status = JobStatus.COMPLETED;
+        this.completedAt = OffsetDateTime.now();
     }
 }

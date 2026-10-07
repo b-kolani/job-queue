@@ -1,6 +1,5 @@
 package com.biman.job_queue.service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.biman.job_queue.dto.CreateJobRequest;
 import com.biman.job_queue.entity.Job;
-import com.biman.job_queue.entity.JobStatus;
 import com.biman.job_queue.exception.JobNotFoundException;
 import com.biman.job_queue.repository.JobRepository;
 
@@ -52,8 +50,13 @@ public class JobService {
         }
 
         Job pendingJob = job.get();
-        pendingJob.setStatus(JobStatus.PROCESSING);
-        pendingJob.setStartedAt(OffsetDateTime.now());
+
+        // We don't want let the Service aknowledge 
+        // the internal details of the transaction
+        // ie how the job passes from PENDING to PROCESSING.
+        // This system is one caracteristic of a state machine
+        // (transition)
+        pendingJob.startProcessing();
 
         jobRepository.save(pendingJob);
 
@@ -82,14 +85,15 @@ public class JobService {
         }
 
         Job recoveredJob = staleJob.get();
-        int attempts = recoveredJob.getAttempts();
 
-        if (attempts < 3) {
-            recoveredJob.setStatus(JobStatus.PENDING);
-            recoveredJob.setStartedAt(null);
-            recoveredJob.setAttempts(attempts + 1);
+        if (recoveredJob.canRetry()) {
+            // recoveredJob.setStatus(JobStatus.PENDING);
+            // recoveredJob.setStartedAt(null);
+            recoveredJob.retry();
+            // recoveredJob.setAttempts(attempts + 1);
         } else {
-            recoveredJob.setStatus(JobStatus.FAILED);
+            // recoveredJob.setStatus(JobStatus.FAILED);
+            recoveredJob.fail();
         }
         
         // This can be skip beacuse JPA will auto-detected changes 

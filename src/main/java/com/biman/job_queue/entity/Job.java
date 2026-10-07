@@ -18,6 +18,8 @@ import jakarta.persistence.Table;
 @Table(name="jobs")
 public class Job {
 
+    private static final int MAX_ATTEMPTS = 3;
+
     @Id 
     @Column(name = "id")
     private UUID id = UUID.randomUUID();
@@ -89,24 +91,44 @@ public class Job {
     }
 
     // ---- SETTERS ----
-    public void setStatus(JobStatus status) {
-        this.status = status;
-    }
+    // public void setStatus(JobStatus status) {
+    //     this.status = status;
+    // }
 
-    public void setAttempts(int attempts) {
-        if (attempts < 0) {
-            throw new IllegalArgumentException("Attempts cannot be negative.");
-        }
+    // public void setAttempts(int attempts) {
+    //     if (attempts < 0) {
+    //         throw new IllegalArgumentException("Attempts cannot be negative.");
+    //     }
 
-        this.attempts = attempts;
-    }
+    //     this.attempts = attempts;
+    // }
 
-    public void setStartedAt(OffsetDateTime startedAt) {
-        this.startedAt = startedAt;
+    // public void setStartedAt(OffsetDateTime startedAt) {
+    //     this.startedAt = startedAt;
+    // }
+
+    public void startProcessing() {
+        this.status = JobStatus.PROCESSING;
+        this.startedAt = OffsetDateTime.now();
     }
 
     public void complete() {
         this.status = JobStatus.COMPLETED;
         this.completedAt = OffsetDateTime.now();
+    }
+
+    public void retry() {
+        this.status = JobStatus.PENDING;
+        this.startedAt = null;
+        this.attempts++;
+    }
+
+    public void fail() {
+        this.status = JobStatus.FAILED;
+        this.completedAt = null;
+    }
+
+    public boolean canRetry() {
+        return attempts < MAX_ATTEMPTS;
     }
 }

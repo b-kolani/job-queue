@@ -58,7 +58,9 @@ public class JobService {
         // (transition)
         pendingJob.startProcessing();
 
-        jobRepository.save(pendingJob);
+        // Managed Entity Hibernate Dirty Checking
+        // No need of this save() below
+        // jobRepository.save(pendingJob);
 
         return Optional.of(pendingJob);
     }
@@ -87,12 +89,8 @@ public class JobService {
         Job recoveredJob = staleJob.get();
 
         if (recoveredJob.canRetry()) {
-            // recoveredJob.setStatus(JobStatus.PENDING);
-            // recoveredJob.setStartedAt(null);
             recoveredJob.retry();
-            // recoveredJob.setAttempts(attempts + 1);
         } else {
-            // recoveredJob.setStatus(JobStatus.FAILED);
             recoveredJob.fail();
         }
         

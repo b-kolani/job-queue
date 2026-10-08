@@ -33,14 +33,14 @@ public class RecoveryWorker {
         Optional<Job> staleJob = jobService.recoverNextStaleJob();
 
         if (staleJob.isEmpty()) {
-            System.out.println(
-                "Aucun job à récupérer"
-            );
+            // System.out.println(
+            //     "Aucun job à récupérer"
+            // );
             return;
         }
 
-        System.out.println(
-            "Job récupéré : " + staleJob.get().getId()
-        );
+        // System.out.println(
+        //     "Job récupéré : " + staleJob.get().getId()
+        // );
     }
 }

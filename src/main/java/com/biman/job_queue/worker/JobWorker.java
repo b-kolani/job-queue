@@ -22,9 +22,9 @@ public class JobWorker {
     // Ask to the Service there is a job 
     // to process
     public void processNextJob() {
-        System.out.println(
-            "Worker Thread: " + Thread.currentThread().getName()
-        );
+        // System.out.println(
+        //     "Worker Thread: " + Thread.currentThread().getName()
+        // );
 
         Optional<Job> job = jobService.reserveNextJob();
 
@@ -36,17 +36,17 @@ public class JobWorker {
         // Fetch the reserved job
         Job pendingJob = job.get();
 
-        System.out.println(
-            "Worker " + Thread.currentThread().getName()
-            + " traite le job " + pendingJob.getId()
-        );
+        // System.out.println(
+        //     "Worker " + Thread.currentThread().getName()
+        //     + " traite le job " + pendingJob.getId()
+        // );
 
         // Simulate the execution of the job
         // using a timer
-        System.out.println(
-            "START job " + pendingJob.getId()
-            + " - " + Thread.currentThread().getName()
-        );
+        // System.out.println(
+        //     "START job " + pendingJob.getId()
+        //     + " - " + Thread.currentThread().getName()
+        // );
 
         // This line is added volontary 
         // to simulate a crash in order to test if 
@@ -60,10 +60,10 @@ public class JobWorker {
             return;
         }
 
-        System.out.println(
-            "END job " + pendingJob.getId()
-            + " - " + Thread.currentThread().getName()
-        );
+        // System.out.println(
+        //     "END job " + pendingJob.getId()
+        //     + " - " + Thread.currentThread().getName()
+        // );
 
         jobService.completeJob(pendingJob);
     }

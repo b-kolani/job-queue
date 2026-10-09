@@ -2,6 +2,7 @@ package com.biman.job_queue.worker;
 
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,11 @@ import com.biman.job_queue.service.JobService;
 // the queue for other Workers to process them 
 // if their attempt number to process them is 
 // less than some max attempts.
+@ConditionalOnProperty(
+    name = "job.recovery.enabled",
+    havingValue = "true",
+    matchIfMissing = true
+)
 @Component 
 public class RecoveryWorker {
 
@@ -33,14 +39,7 @@ public class RecoveryWorker {
         Optional<Job> staleJob = jobService.recoverNextStaleJob();
 
         if (staleJob.isEmpty()) {
-            // System.out.println(
-            //     "Aucun job à récupérer"
-            // );
             return;
         }
-
-        // System.out.println(
-        //     "Job récupéré : " + staleJob.get().getId()
-        // );
     }
 }

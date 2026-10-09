@@ -2,11 +2,20 @@ package com.biman.job_queue.worker;
 
 import java.time.Duration;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 
+// This annotation added a Spring conditional property to control
+// whenever this component workers should run automatically
+// or not.
+@ConditionalOnProperty(
+    name = "job.worker.enabled",
+    havingValue = "true",
+    matchIfMissing = true
+)
 @Component 
 public class WorkerExecutor {
     
